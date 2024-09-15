@@ -4,6 +4,7 @@ import speech_recognition as sr
 import wikipedia
 import webbrowser
 import os
+import random
 engine=pyttsx3.init('sapi5')
 voices=engine.getProperty('voices')
 engine.setProperty('voice',voices[1].id)
@@ -23,8 +24,6 @@ def wishMe():
     speak("I am Emma,your assistant. Please tell me how may I help you?")
      
 def takecommand():
-    # takes microphone input from the user and returns
-    # string output
     r= sr.Recognizer()
     with sr.Microphone() as source:
         print("Listening...")
@@ -62,9 +61,22 @@ def main():
         elif "open notepad" in query:
             codepath="C:\\Program Files\\WindowsApps\\Microsoft.WindowsNotepad_11.2309.28.0_x64__8wekyb3d8bbwe\\Notepad\\Notepad.exe"
             os.startfile(codepath)
-        elif "open calculator"in query:
-            pass
-        
+        elif "calculate"in query:
+            speak("Please tell me the calculation you want to perform.")
+            query = takecommand().lower()
+            try:
+                result = eval(query)
+                speak(f"The result is {result}")
+            except Exception as e:
+                speak("Sorry, I couldn't understand the calculation. Please try again.")
+        elif "joke" in query:
+            jokes = [
+            "Why don't scientists trust atoms? Because they make up everything!",
+            "Why don't programmers like nature? It has too many bugs.",
+            "What do you call 8 hobbits? A hobbyte!"
+            ]
+            speak(random.choice(jokes))
+
         elif "open" in query:
             comm=query_split[query_split.index('open')+1 ]
             webbrowser.open(f"{comm}.com")
@@ -75,8 +87,14 @@ def main():
                 strDate=datetime.date.today().strftime("%B:%d:%Y")
                 speak(f' The date is {strDate}')
         elif "open code" in query:
-            codepath="C:\\Users\\Dell\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
+            codepath="D:\\Jarvis-AI-Assistant\\jarvis.py"
             os.startfile(codepath)
         elif "open notepad" in query:
-            codepath="C:\\Program Files\\WindowsApps\\Microsoft.WindowsNotepad_11.2309.28.0_x64__8wekyb3d8bbwe\\Notepad"
+            codepath="D:\\text1.txt"
+            os.startfile(codepath)
+        elif "bye" in query:
+            speak("Bye, have a great day!")
+            exit()
+        else:
+            speak("Sorry, I didn't understand that. Please try again.")
 main()
